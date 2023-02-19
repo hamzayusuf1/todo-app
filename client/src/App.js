@@ -30,7 +30,6 @@ function App() {
           <Hero />
           <Input />
           <div className="container2">
-            <Todo />
             <Button />
           </div>
         </div>

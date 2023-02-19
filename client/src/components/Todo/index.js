@@ -11,8 +11,29 @@ const DUMMY_DATA = [
   "Complete coding project",
 ];
 
-const Todo = () => {
+const Todo = ({ currentState }) => {
   const { theme, tasks, setTasks } = useContext(ThemeContext);
+
+  let allTasks = tasks;
+
+  const onlyActive = allTasks.filter((task) => task.isCompleted === false);
+
+  const onlyComplete = allTasks.filter((task) => task.isCompleted === true);
+
+  console.log(allTasks);
+  console.log(currentState);
+  console.log(onlyComplete);
+
+  if (currentState === "Active") {
+    allTasks = onlyActive;
+
+    console.log("ACTIVE");
+  } else if (currentState === "Completed") {
+    allTasks = onlyComplete;
+    console.log("COMPLETED");
+  } else {
+    allTasks = tasks;
+  }
 
   const handleDelete = (id) => {
     const nonDeleted = tasks.filter((task) => {
@@ -29,14 +50,12 @@ const Todo = () => {
       task.id === id ? { ...task, isCompleted: !task.isCompleted } : task
     );
 
-    console.log(tasks);
-
     setTasks(newTasks);
   };
 
   return (
     <div className="task-list">
-      {tasks.map((task) => {
+      {allTasks.map((task) => {
         return (
           <div className={`todo-item-${theme}`} key={task}>
             <div className="todo">

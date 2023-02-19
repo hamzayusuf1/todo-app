@@ -1,17 +1,17 @@
 import React, { useContext, useState } from "react";
 
 import { ThemeContext } from "../../App";
+import Todo from "../Todo/";
 
 import "./index.css";
 
 const Button = () => {
   const { tasks, setTasks } = useContext(ThemeContext);
 
-  const [active, setActive] = useState("");
+  const [active, setActive] = useState("All");
 
   const handleClick = (e) => {
     const btnClicked = e.target.innerText;
-
     setActive(btnClicked);
 
     if (btnClicked === "Active") {
@@ -30,40 +30,43 @@ const Button = () => {
     setTasks(completedArr);
   };
   return (
-    <div className="buttons-container">
-      <div>
-        <p>{`${count} items left`}</p>
+    <>
+      <Todo currentState={active} />
+      <div className="buttons-container">
+        <div>
+          <p>{`${count} items left`}</p>
+        </div>
+        <div className="buttons">
+          <button
+            onClick={handleClick}
+            className={active === "All" ? "active" : ""}
+          >
+            All
+          </button>
+          <button
+            onClick={handleClick}
+            className={active === "Active" ? "active" : ""}
+          >
+            Active
+          </button>
+          <button
+            onClick={handleClick}
+            className={active === "Completed" ? "active" : ""}
+          >
+            Completed
+          </button>
+        </div>
+        <div>
+          <button
+            onClick={() => {
+              clearCompleted();
+            }}
+          >
+            Clear Completed: {count2}
+          </button>
+        </div>
       </div>
-      <div className="buttons">
-        <button
-          onClick={handleClick}
-          className={active === "All" ? "active" : ""}
-        >
-          All
-        </button>
-        <button
-          onClick={handleClick}
-          className={active === "Active" ? "active" : ""}
-        >
-          Active
-        </button>
-        <button
-          onClick={handleClick}
-          className={active === "Completed" ? "active" : ""}
-        >
-          Completed
-        </button>
-      </div>
-      <div>
-        <button
-          onClick={() => {
-            clearCompleted();
-          }}
-        >
-          Clear Completed: {count2}
-        </button>
-      </div>
-    </div>
+    </>
   );
 };
 
