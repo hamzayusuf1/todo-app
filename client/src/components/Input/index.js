@@ -1,4 +1,5 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 import { ThemeContext } from "../../App";
 import CHECK from "../../images/icon-check.svg";
@@ -12,16 +13,22 @@ const Input = () => {
 
   const formSubmit = (e) => {
     e.preventDefault();
-    const allTasks = JSON.parse(localStorage.getItem("tasks")) || [];
-    console.log(allTasks);
-    allTasks.push(inputValue);
 
-    localStorage.setItem("tasks", JSON.stringify(allTasks));
-    setTasks(allTasks);
-    console.log("Sumbit working");
+    let todoObj = {
+      id: uuidv4(),
+      taskText: inputValue,
+      isCompleted: false,
+    };
 
+    setTasks([...tasks, todoObj]);
     setInputValue("");
+
+    console.log("Sumbit working");
   };
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
   return (
     <div className="input-container">

@@ -1,3 +1,7 @@
+button {
+  color: gray;
+}
+
 .buttons-container {
   height: 3rem;
   background-color: var(--container-bg);
@@ -11,6 +15,10 @@
 
 .buttons-container p {
   color: gray;
+}
+
+.active {
+  color: #3a7cfd;
 }
 
 .buttons button {
