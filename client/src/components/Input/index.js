@@ -9,7 +9,6 @@ const Input = () => {
   const { theme, tasks, setTasks } = useContext(ThemeContext);
 
   const [inputValue, setInputValue] = useState("");
-  console.log(tasks);
 
   const formSubmit = (e) => {
     e.preventDefault();
@@ -32,9 +31,7 @@ const Input = () => {
 
   return (
     <div className="input-container">
-      <div className="input-check">
-        <img src={CHECK} />
-      </div>
+      <div className="input-check"></div>
       <form onSubmit={formSubmit}>
         <input
           onChange={(e) => {

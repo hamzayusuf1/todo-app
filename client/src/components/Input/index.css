@@ -30,21 +30,23 @@
   /* padding-left: 2rem; */
 }
 
+#input:focus {
+  outline: 1px blue solid;
+}
+
 #input::placeholder {
   font-size: 12px;
 }
 
 .input-check {
-  height: 1rem;
-  width: 1rem;
+  height: 1.1rem;
+  width: 1.1rem;
   border: gray 1px solid;
   border-radius: 50px;
   margin-right: 1.5rem;
   margin-left: 1rem;
+
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.input-check img {
 }

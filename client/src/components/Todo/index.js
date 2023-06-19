@@ -1,4 +1,5 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef, useState } from "react";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 import { ThemeContext } from "../../App";
 import "./index.css";
@@ -12,6 +13,8 @@ const DUMMY_DATA = [
 ];
 
 const Todo = ({ currentState }) => {
+  const [arr, setArr] = useState([]);
+
   const { theme, tasks, setTasks } = useContext(ThemeContext);
 
   let allTasks = tasks;
@@ -20,9 +23,9 @@ const Todo = ({ currentState }) => {
 
   const onlyComplete = allTasks.filter((task) => task.isCompleted === true);
 
-  console.log(allTasks);
-  console.log(currentState);
-  console.log(onlyComplete);
+  // console.log(allTasks);
+  // console.log(currentState);
+  // console.log(onlyComplete);
 
   if (currentState === "Active") {
     allTasks = onlyActive;
@@ -53,34 +56,96 @@ const Todo = ({ currentState }) => {
     setTasks(newTasks);
   };
 
+  const handleOnDragEnd = (result) => {
+    if (!result.destination) return;
+    const newTasks = Array.from(allTasks);
+    const [draggedItem] = newTasks.splice(result.source.index, 1);
+    newTasks.splice(result.destination.index, 0, draggedItem);
+    setArr(newTasks);
+  };
+
+  // const dragItem = useRef();
+  // const itemPassed = useRef();
+
+  // const dragStart = (e, place) => {
+  //   dragItem.current = place;
+  //   console.log(e.target.innerText);
+  // };
+
+  // const dragEnter = (e, place) => {
+  //   itemPassed.current = place;
+  //   console.log(e.target.innerText);
+  // };
+
+  // const dragEnd = (e) => {
+  //   const copyTasks = [...tasks];
+  //   const dragItemPos = copyTasks[dragItem.current];
+  //   copyTasks.splice(dragItem.current, 1);
+  //   copyTasks.splice(itemPassed.current, 0, dragItemPos);
+  //   dragItem.current = null;
+  //   itemPassed.current = null;
+  //   setTasks(copyTasks);
+  // };
+
   return (
-    <div className="task-list">
-      {allTasks.map((task) => {
-        return (
-          <div className={`todo-item-${theme}`} key={task}>
-            <div className="todo">
-              <div
-                className={`check check-${task.isCompleted}`}
-                onClick={() => {
-                  handleComplete(task.id);
-                }}
-              >
-                {task.isCompleted ? <img src={CHECK} /> : ""}
-              </div>
-              <p className={`text-${task.isCompleted}`}>{task.taskText}</p>
+    <DragDropContext onDragEnd={handleOnDragEnd}>
+      <div className="task-list">
+        <Droppable droppableId="todos">
+          {(provided) => (
+            <div ref={provided.innerRef} {...provided.droppableProps}>
+              {allTasks.map((task, index) => {
+                return (
+                  <Draggable
+                    key={index}
+                    draggableId={index.toString()}
+                    index={index}
+                  >
+                    {(provided) => (
+                      <div
+                        className={`todo-item-${theme}`}
+                        // onDragStart={(e) => dragStart(e, index)}
+                        // onDragEnter={(e) => dragEnter(e, index)}
+                        // onDragEnd={(e) => dragEnd(e)}
+                        // draggable
+                        onClick={() => {
+                          console.log(index);
+                        }}
+                        ref={provided.innerRef}
+                        {...provided.dragHandleProps}
+                        {...provided.draggableProps}
+                      >
+                        <div className="todo">
+                          <div
+                            className={`check check-${task.isCompleted}`}
+                            onClick={() => {
+                              handleComplete(task.id);
+                            }}
+                          >
+                            {task.isCompleted ? <img src={CHECK} /> : ""}
+                          </div>
+                          <p className={`text-${task.isCompleted}`}>
+                            {task.taskText}
+                          </p>
+                        </div>
+                        <div className="icon">
+                          <img
+                            onClick={() => {
+                              handleDelete(task.id);
+                            }}
+                            src={icon}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </Draggable>
+                );
+              })}
+              {provided.placeholder}
             </div>
-            <div className="icon">
-              <img
-                onClick={() => {
-                  handleDelete(task.id);
-                }}
-                src={icon}
-              />
-            </div>
-          </div>
-        );
-      })}
-    </div>
+          )}
+        </Droppable>
+      </div>
+    </DragDropContext>
   );
 };
 
